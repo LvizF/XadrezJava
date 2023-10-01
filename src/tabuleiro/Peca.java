@@ -6,9 +6,17 @@ public abstract class Peca {
     protected Posicao posicao;
     private Tabuleiro tabuleiro;
 
-    public abstract boolean[][] movimentosPossiveis();
+    public Peca(Posicao pos, Tabuleiro tabuleiro){
+        this.posicao = pos;
+        this.tabuleiro = tabuleiro;
+    }
+
+    /*public abstract boolean[][] movimentosPossiveis();
     public abstract boolean movimentoPossivel(Posicao pos);
     public abstract boolean haAlgumMovimentoPossivel();
-    public abstract void mudaPosicao(Posicao pos);
+    public abstract void mudaPosicao(Posicao pos);*/
 
+    public Tabuleiro getTabuleiro() {
+        return tabuleiro;
+    }
 }

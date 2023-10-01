@@ -22,7 +22,7 @@ public class Tabuleiro {
     public boolean haPeca(Posicao pos){
         if (this.pecas[pos.getLinha()][pos.getColuna()] != null)
             return true;
-        
+
         return false;
     }
 
@@ -47,5 +47,13 @@ public class Tabuleiro {
         Peca p = this.pecas[pos.getLinha()][pos.getColuna()];
         this.pecas[pos.getLinha()][pos.getColuna()] = null;
         return p;
+    }
+
+    public int getLinhas() {
+        return linhas;
+    }
+
+    public int getColunas() {
+        return colunas;
     }
 }
