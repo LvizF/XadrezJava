@@ -18,9 +18,9 @@ public class Interface {
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String ANSI_YELLOW = "\u001B[33m";
 
-    private static  char[] colunas = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private static char[] colunas = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-    public static PosicaoXadrez lerPosicao(Scanner teclado) throws ExcecaoXadrez{
+    public static PosicaoXadrez lerPosicao(Scanner teclado) throws InputMismatchException{
         try {
             String pos = teclado.nextLine();
             return new PosicaoXadrez(pos.charAt(0), Integer.valueOf(pos.substring(1)));
@@ -47,5 +47,10 @@ public class Interface {
         for (int i = 0; i < pecas.length; i++)
             System.out.printf(" %c ", colunas[i]);
         System.out.println();
+    }
+
+    public static void limparTela() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
