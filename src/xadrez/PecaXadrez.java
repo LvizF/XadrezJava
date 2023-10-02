@@ -8,13 +8,13 @@ public abstract class PecaXadrez extends Peca {
     private Cor cor;
     private int contagemMovimentos;
 
-    public PecaXadrez(PosicaoXadrez pos, String cor, Tabuleiro tabuleiro){
-        super(pos, tabuleiro);
-        this.cor = Cor.valueOf(cor);
+    public PecaXadrez(Cor cor, Tabuleiro tabuleiro){
+        super(tabuleiro);
+        this.cor = cor;
         this.contagemMovimentos = 0;
     }
 
-    public PosicaoXadrez getPosicaoXadrez(){
+    public PosicaoXadrez getPosicaoXadrez() throws ExcecaoXadrez{
         return PosicaoXadrez.dePosicao(this.posicao);
     }
 

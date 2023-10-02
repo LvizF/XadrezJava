@@ -1,13 +1,11 @@
 package tabuleiro;
 
-import javafx.scene.control.Tab;
-
 public abstract class Peca {
     protected Posicao posicao;
     private Tabuleiro tabuleiro;
 
-    public Peca(Posicao pos, Tabuleiro tabuleiro){
-        this.posicao = pos;
+    public Peca(Tabuleiro tabuleiro){
+        this.posicao = null;
         this.tabuleiro = tabuleiro;
     }
 
@@ -18,5 +16,9 @@ public abstract class Peca {
 
     public Tabuleiro getTabuleiro() {
         return tabuleiro;
+    }
+
+    public void setPosicao(Posicao pos){
+        this.posicao = pos;
     }
 }

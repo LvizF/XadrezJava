@@ -7,21 +7,25 @@ import java.util.Arrays;
 public class PosicaoXadrez extends Posicao {
     private int linha;
     private char coluna;
-    public static char[] colunas = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
-    public PosicaoXadrez(int linha, int coluna){
-        super(linha, coluna);
-    }
-
-    public PosicaoXadrez(int linha, char coluna){
-        super(linha, Arrays.asList(colunas).indexOf(coluna));
+    public PosicaoXadrez(char coluna, int linha) throws ExcecaoXadrez {
+        super();
+        if (coluna < 'a' || linha < 1 || coluna > 'h' || linha > 8)
+            throw new ExcecaoXadrez(String.format("A posição %c%d não existe.", coluna, linha));
+        this.linha = linha;
+        this.coluna = coluna;
     }
 
     protected Posicao paraPosicao(){
-        return new Posicao(linha, Arrays.asList(colunas).indexOf(coluna));
+        return new Posicao(linha-1, this.coluna - 'a');
     }
 
-     protected static PosicaoXadrez dePosicao(Posicao pos){
-        return new PosicaoXadrez(pos.getLinha(), colunas[pos.getColuna()]);
+     protected static PosicaoXadrez dePosicao(Posicao pos) throws ExcecaoXadrez{
+        return new PosicaoXadrez((char)('a'+ pos.getColuna()), pos.getLinha());
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%c%d", this.coluna, this.linha);
     }
 }
