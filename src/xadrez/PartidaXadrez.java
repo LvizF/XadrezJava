@@ -40,4 +40,38 @@ public class PartidaXadrez {
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'a', 8);
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'h', 8);
     }
+
+    public PecaXadrez fazerMovimento(PosicaoXadrez origem, PosicaoXadrez destino) throws ExcecaoXadrez, ExcecaoTabuleiro{
+        validarPosicao(origem);
+        PecaXadrez pecaCapturada = realizaMovimento(origem.paraPosicao(), destino.paraPosicao());
+
+        return pecaCapturada;
+    }
+
+    private PecaXadrez realizaMovimento(Posicao orig, Posicao dest) throws ExcecaoTabuleiro{
+        PecaXadrez movente = (PecaXadrez) this.tabuleiro.getPeca(orig);
+        PecaXadrez pecaCapturada = (this.tabuleiro.haPeca((dest))) ? (PecaXadrez) this.tabuleiro.getPeca(dest) : null;
+
+        if (this.tabuleiro.haPeca(dest) && pecaCapturada.getCor() == movente.getCor())
+            throw new ExcecaoXadrez("Uma peça não pode capturar outra da mesma cor.");
+
+        this.tabuleiro.removerPeca(orig);
+        if (pecaCapturada != null)
+            this.tabuleiro.removerPeca(dest);
+
+        this.tabuleiro.colocarPeca(movente, dest);
+
+        return pecaCapturada;
+    }
+
+    private void validarPosicao(PosicaoXadrez orig) throws ExcecaoTabuleiro{
+        if (!this.tabuleiro.haPeca(orig.paraPosicao()))
+            throw new ExcecaoXadrez("Não há peça na posição de origem do movimento.");
+    }
+
+    public void getPeca(PosicaoXadrez pos) throws ExcecaoTabuleiro{
+        PecaXadrez p = (PecaXadrez) this.tabuleiro.getPeca(pos.paraPosicao());
+        System.out.printf("%s - %s\n", p, (p.getCor() == Cor.BRANCO) ? "Branco" : "Preto");
+    }
 }
+

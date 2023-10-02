@@ -29,9 +29,11 @@ public abstract class PecaXadrez extends Peca {
         this.contagemMovimentos--;
     }
 
+    */
     public Cor getCor() {
         return cor;
     }
+    /*
 
     public int getContagemMovimentos() {
         return contagemMovimentos;

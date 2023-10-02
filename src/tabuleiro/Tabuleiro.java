@@ -56,7 +56,9 @@ public class Tabuleiro {
         if (!this.haPeca(pos))
             throw new ExcecaoTabuleiro("Não há peça na posição indicada.");
 
-        Peca p = this.pecas[pos.getLinha()][pos.getColuna()];
+        Peca p = this.getPeca(pos);
+        p.setPosicao(null);
+
         this.pecas[pos.getLinha()][pos.getColuna()] = null;
         return p;
     }
