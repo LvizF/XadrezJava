@@ -32,7 +32,7 @@ public class Tabuleiro {
 
     public boolean haPeca(Posicao pos) throws ExcecaoTabuleiro{
         if (!this.posicaoExiste(pos))
-            throw new ExcecaoTabuleiro("A posição indicada não existe no tabuleiro.");
+            throw new ExcecaoTabuleiro(String.format("A posição %s não existe.", pos));
 
         return this.getPeca(pos) != null;
     }

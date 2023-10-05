@@ -19,40 +19,42 @@ public class Torre extends PecaXadrez{
         int linha = this.posicao.getLinha();
         int coluna = this.posicao.getColuna();
 
-        for (int i = linha+1; i < 8; i++){
-            if (this.getTabuleiro().haPeca(i, coluna)){
-                if (((PecaXadrez) this.getTabuleiro().getPeca(i, coluna)).getCor() != this.getCor())
-                    movs[i][coluna] = true;
+        Posicao p = new Posicao();
+
+        for (p.setValores(linha+1, coluna); this.getTabuleiro().posicaoExiste(p); p.setLinha(p.getLinha()+1)){
+            if (this.getTabuleiro().haPeca(p)){
+                if (this.haPecaAdversaria(p))
+                    movs[p.getLinha()][p.getColuna()] = true;
                 break;
             }
-            movs[i][coluna] = true;
+            movs[p.getLinha()][p.getColuna()] = true;
         }
 
-        for (int i = linha-1; i >= 0; i--){
-            if (this.getTabuleiro().haPeca(i, coluna)){
-                if (((PecaXadrez) this.getTabuleiro().getPeca(i, coluna)).getCor() != this.getCor())
-                    movs[i][coluna] = true;
+        for (p.setValores(linha-1, coluna); this.getTabuleiro().posicaoExiste(p); p.setLinha(p.getLinha()-1)){
+            if (this.getTabuleiro().haPeca(p)){
+                if (this.haPecaAdversaria(p))
+                    movs[p.getLinha()][p.getColuna()] = true;
                 break;
             }
-            movs[i][coluna] = true;
+            movs[p.getLinha()][p.getColuna()] = true;
         }
 
-        for (int i = coluna+1; i < 8; i++){
-            if (this.getTabuleiro().haPeca(linha, i)){
-                if (((PecaXadrez) this.getTabuleiro().getPeca(linha, i)).getCor() != this.getCor())
-                    movs[linha][i] = true;
+        for (p.setValores(linha, coluna+1); this.getTabuleiro().posicaoExiste(p); p.setColuna(p.getColuna()+1)){
+            if (this.getTabuleiro().haPeca(p)){
+                if (this.haPecaAdversaria(p))
+                    movs[p.getLinha()][p.getColuna()] = true;
                 break;
             }
-            movs[linha][i] = true;
+            movs[p.getLinha()][p.getColuna()] = true;
         }
 
-        for (int i = coluna-1; i >= 0; i--){
-            if (this.getTabuleiro().haPeca(linha, i)){
-                if (((PecaXadrez) this.getTabuleiro().getPeca(linha, i)).getCor() != this.getCor())
-                    movs[linha][i] = true;
+        for (p.setValores(linha, coluna-1); this.getTabuleiro().posicaoExiste(p); p.setColuna(p.getColuna()-1)){
+            if (this.getTabuleiro().haPeca(p)){
+                if (this.haPecaAdversaria(p))
+                    movs[p.getLinha()][p.getColuna()] = true;
                 break;
             }
-            movs[linha][i] = true;
+            movs[p.getLinha()][p.getColuna()] = true;
         }
 
         return movs;

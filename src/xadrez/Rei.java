@@ -15,10 +15,59 @@ public class Rei extends PecaXadrez{
 
     @Override
     public boolean[][] movimentosPossiveis() throws ExcecaoTabuleiro {
-        Posicao pos = this.posicao;
-
         boolean[][] movs = new boolean[this.getTabuleiro().getLinhas()][this.getTabuleiro().getColunas()];
 
+        int linha = this.posicao.getLinha();
+        int coluna = this.posicao.getColuna();
+
+        Posicao pos = new Posicao();
+
+        //Uma fileira acima.
+        pos.setValores(linha+1, coluna-1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha+1, coluna);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha+1, coluna+1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        //Mesma fileira.
+        pos.setValores(linha, coluna-1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha, coluna);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha, coluna+1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        //Uma fileira abaixo.
+        pos.setValores(linha-1, coluna-1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha-1, coluna);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+        pos.setValores(linha-1, coluna+1);
+        if (this.getTabuleiro().posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
+            movs[pos.getLinha()][pos.getColuna()] = true;
+
+
         return movs;
+    }
+
+    private boolean movimentoPossivelParaoRei(Posicao pos) throws ExcecaoTabuleiro {
+        PecaXadrez p = (PecaXadrez) this.getTabuleiro().getPeca(pos);
+
+        return p == null || p.getCor() != this.getCor();
     }
 }

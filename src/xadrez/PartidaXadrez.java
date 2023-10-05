@@ -7,19 +7,23 @@ import tabuleiro.Tabuleiro;
 public class PartidaXadrez {
 
     private Tabuleiro tabuleiro;
+    private int turno;
+    private Cor jogadorAtual;
 
     public PartidaXadrez() throws ExcecaoTabuleiro, ExcecaoXadrez{
         this.tabuleiro = new Tabuleiro(8, 8);
+        this.turno = 1;
+        this.jogadorAtual = Cor.BRANCO;
         this.posicaoInicial();
     }
 
     public PecaXadrez[][] getPecas() throws ExcecaoTabuleiro{
-        PecaXadrez[][] matriz = new PecaXadrez[this.tabuleiro.getLinhas()][this.tabuleiro.getColunas()];
-        for (int i = 0; i < this.tabuleiro.getLinhas(); i++){
-            for (int j = 0; j < this.tabuleiro.getColunas(); j++){
+        PecaXadrez[][] matriz = new PecaXadrez[tabuleiro.getLinhas()][tabuleiro.getColunas()];
+        for (int i = 0; i < tabuleiro.getLinhas(); i++){
+            for (int j = 0; j < tabuleiro.getColunas(); j++){
                 Posicao p = new Posicao(i, j);
                 if (this.tabuleiro.haPeca(p)){
-                    matriz[i][j] = (PecaXadrez) this.tabuleiro.getPeca(p);
+                    matriz[i][j] = (PecaXadrez) tabuleiro.getPeca(p);
                 }
             }
         }
@@ -27,7 +31,7 @@ public class PartidaXadrez {
     }
 
     private void colocarPeca(PecaXadrez peca, char coluna, int linha) throws ExcecaoXadrez, ExcecaoTabuleiro {
-        this.tabuleiro.colocarPeca(peca, new PosicaoXadrez(coluna, linha).paraPosicao());
+        tabuleiro.colocarPeca(peca, new PosicaoXadrez(coluna, linha).paraPosicao());
     }
 
     public void posicaoInicial() throws ExcecaoTabuleiro{
@@ -45,44 +49,70 @@ public class PartidaXadrez {
     }
 
     public PecaXadrez fazerMovimento(PosicaoXadrez origem, PosicaoXadrez destino) throws ExcecaoXadrez, ExcecaoTabuleiro{
-        validarPosicao(origem);
+        validarPosicaoOrigem(origem);
 
-        if (!this.tabuleiro.getPeca(origem.paraPosicao()).movimentoPossivel(destino.paraPosicao()
-        ))
-            throw new ExcecaoXadrez("Movimento ilegal.");
+        validarPosicaoDestino(origem.paraPosicao(), destino.paraPosicao());
 
         PecaXadrez pecaCapturada = realizaMovimento(origem.paraPosicao(), destino.paraPosicao());
+
+        proximoTurno();
 
         return pecaCapturada;
     }
 
     private PecaXadrez realizaMovimento(Posicao orig, Posicao dest) throws ExcecaoTabuleiro{
-        PecaXadrez movente = (PecaXadrez) this.tabuleiro.getPeca(orig);
-        PecaXadrez pecaCapturada = (this.tabuleiro.haPeca((dest))) ? (PecaXadrez) this.tabuleiro.getPeca(dest) : null;
+        PecaXadrez movente = (PecaXadrez) tabuleiro.getPeca(orig);
+        PecaXadrez pecaCapturada = (tabuleiro.haPeca((dest))) ? (PecaXadrez) this.tabuleiro.getPeca(dest) : null;
 
-        if (this.tabuleiro.haPeca(dest) && pecaCapturada.getCor() == movente.getCor())
+        if (tabuleiro.haPeca(dest) && pecaCapturada.getCor() == movente.getCor())
             throw new ExcecaoXadrez("Uma peça não pode capturar outra da mesma cor.");
 
-        this.tabuleiro.removerPeca(orig);
+        tabuleiro.removerPeca(orig);
         if (pecaCapturada != null)
-            this.tabuleiro.removerPeca(dest);
+            tabuleiro.removerPeca(dest);
 
-        this.tabuleiro.colocarPeca(movente, dest);
+        tabuleiro.colocarPeca(movente, dest);
 
         return pecaCapturada;
     }
 
-    private void validarPosicao(PosicaoXadrez orig) throws ExcecaoTabuleiro{
-        if (!this.tabuleiro.haPeca(orig.paraPosicao()))
-            throw new ExcecaoXadrez("Não há peça na posição de origem do movimento.");
+    private void validarPosicaoOrigem(PosicaoXadrez orig) throws ExcecaoTabuleiro{
+        if (!tabuleiro.haPeca(orig.paraPosicao()))
+            throw new ExcecaoXadrez(String.format("Não há peça na posição %s.", orig));
 
-        if (!this.tabuleiro.getPeca(orig.paraPosicao()).haAlgumMovimentoPossivel())
+        if (((PecaXadrez) tabuleiro.getPeca(orig.paraPosicao())).getCor() != this.jogadorAtual)
+            throw new ExcecaoXadrez(String.format("Não é turno das %s.", (((PecaXadrez) tabuleiro.getPeca(orig.paraPosicao())).getCor() == Cor.BRANCO) ? "brancas" : "pretas"));
+
+        if (!tabuleiro.getPeca(orig.paraPosicao()).haAlgumMovimentoPossivel())
             throw new ExcecaoXadrez("A peça escolhida não pode realizar nenhum movimento.");
     }
 
-    public void getPeca(PosicaoXadrez pos) throws ExcecaoTabuleiro{
-        PecaXadrez p = (PecaXadrez) this.tabuleiro.getPeca(pos.paraPosicao());
-        System.out.printf("%s - %s\n", p, (p.getCor() == Cor.BRANCO) ? "Branco" : "Preto");
+    private void validarPosicaoDestino(Posicao orig, Posicao dest) throws ExcecaoTabuleiro{
+        if (!tabuleiro.getPeca(orig).movimentoPossivel(dest))
+            throw new ExcecaoXadrez("Movimento ilegal.");
+    }
+
+    public boolean[][] movimentosPossiveis(PosicaoXadrez posicaoOrigem) throws ExcecaoTabuleiro{
+        if (!tabuleiro.haPeca(posicaoOrigem.paraPosicao()))
+            throw new ExcecaoXadrez(String.format("Peça não há na posição %s.", posicaoOrigem));
+
+        validarPosicaoOrigem(posicaoOrigem);
+
+        return tabuleiro.getPeca(posicaoOrigem.paraPosicao()).movimentosPossiveis();
+    }
+
+    private void proximoTurno(){
+        this.jogadorAtual = (this.jogadorAtual == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
+        if (this.jogadorAtual == Cor.BRANCO)
+            this.turno++;
+    }
+
+    public int getTurno() {
+        return turno;
+    }
+
+    public Cor getJogadorAtual() {
+        return jogadorAtual;
     }
 }
 

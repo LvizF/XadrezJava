@@ -20,9 +20,17 @@ public class Main {
         while (true) {
             Interface.limparTela();
             try {
+                Interface.imprimePartida(partida);
                 Interface.imprime(partida.getPecas());
                 System.out.print("Casa de origem: ");
                 orig = Interface.lerPosicao(entrada);
+
+                boolean[][] movs_possiveis = partida.movimentosPossiveis(orig);
+
+                Interface.limparTela();
+
+                Interface.imprimePartida(partida);
+                Interface.imprime(partida.getPecas(), movs_possiveis);
 
                 System.out.print("Casa de destino: ");
                 dest = Interface.lerPosicao(entrada);
@@ -30,10 +38,9 @@ public class Main {
                 partida.fazerMovimento(orig, dest);
             }catch(ExcecaoXadrez e){
                 System.out.print(e.getMessage());
+                entrada.nextLine();
             }catch(InputMismatchException e){
                 System.out.print(e.getMessage());
-            }finally {
-                System.out.printf("\n(Pressione enter) ");
                 entrada.nextLine();
             }
         }
