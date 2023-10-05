@@ -19,9 +19,8 @@ public class Main {
         Scanner entrada = new Scanner(System.in);
         while (true) {
             Interface.limparTela();
-            Interface.imprime(partida.getPecas());
-
             try {
+                Interface.imprime(partida.getPecas());
                 System.out.print("Casa de origem: ");
                 orig = Interface.lerPosicao(entrada);
 
@@ -29,7 +28,6 @@ public class Main {
                 dest = Interface.lerPosicao(entrada);
 
                 partida.fazerMovimento(orig, dest);
-                Interface.imprime(partida.getPecas());
             }catch(ExcecaoXadrez e){
                 System.out.print(e.getMessage());
             }catch(InputMismatchException e){

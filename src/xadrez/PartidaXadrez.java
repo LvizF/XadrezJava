@@ -30,7 +30,7 @@ public class PartidaXadrez {
         this.tabuleiro.colocarPeca(peca, new PosicaoXadrez(coluna, linha).paraPosicao());
     }
 
-    public void posicaoInicial() throws ExcecaoXadrez, ExcecaoTabuleiro{
+    public void posicaoInicial() throws ExcecaoTabuleiro{
         this.colocarPeca(new Rei(Cor.BRANCO, this.tabuleiro), 'e', 1);
         this.colocarPeca(new Rei(Cor.PRETO, this.tabuleiro), 'e', 8);
 
@@ -39,10 +39,18 @@ public class PartidaXadrez {
 
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'a', 8);
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'h', 8);
+
+        this.colocarPeca(new Rei(Cor.PRETO, this.tabuleiro), 'h', 5);
+        this.colocarPeca(new Rei(Cor.BRANCO, this.tabuleiro), 'a', 5);
     }
 
     public PecaXadrez fazerMovimento(PosicaoXadrez origem, PosicaoXadrez destino) throws ExcecaoXadrez, ExcecaoTabuleiro{
         validarPosicao(origem);
+
+        if (!this.tabuleiro.getPeca(origem.paraPosicao()).movimentoPossivel(destino.paraPosicao()
+        ))
+            throw new ExcecaoXadrez("Movimento ilegal.");
+
         PecaXadrez pecaCapturada = realizaMovimento(origem.paraPosicao(), destino.paraPosicao());
 
         return pecaCapturada;
@@ -67,6 +75,9 @@ public class PartidaXadrez {
     private void validarPosicao(PosicaoXadrez orig) throws ExcecaoTabuleiro{
         if (!this.tabuleiro.haPeca(orig.paraPosicao()))
             throw new ExcecaoXadrez("Não há peça na posição de origem do movimento.");
+
+        if (!this.tabuleiro.getPeca(orig.paraPosicao()).haAlgumMovimentoPossivel())
+            throw new ExcecaoXadrez("A peça escolhida não pode realizar nenhum movimento.");
     }
 
     public void getPeca(PosicaoXadrez pos) throws ExcecaoTabuleiro{

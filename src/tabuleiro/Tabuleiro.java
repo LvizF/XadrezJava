@@ -37,6 +37,14 @@ public class Tabuleiro {
         return this.getPeca(pos) != null;
     }
 
+    public boolean haPeca(int linha, int coluna) throws ExcecaoTabuleiro{
+        Posicao pos = new Posicao(linha, coluna);
+        if (!this.posicaoExiste(pos))
+            throw new ExcecaoTabuleiro("A posição indicada não existe no tabuleiro.");
+
+        return this.getPeca(pos) != null;
+    }
+
     public boolean posicaoExiste(int linha, int coluna){
         return linha >= 0 && coluna >= 0 && linha < this.getLinhas() && coluna < this.getColunas();
     }
