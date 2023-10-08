@@ -1,10 +1,13 @@
 package application;
 
+import tabuleiro.ExcecaoTabuleiro;
 import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -33,11 +36,24 @@ public class Interface {
         }
     }
 
-    public static void imprimePartida(PartidaXadrez partida){
+    public static void imprimePartida(PartidaXadrez partida) throws ExcecaoTabuleiro {
         System.out.printf("%s%sTURNO ATUAL: %s.%s\n", ANSI_WHITE_BACKGROUND, ANSI_BLACK,
                 (partida.getJogadorAtual() == Cor.BRANCO) ? "BRANCAS" : "PRETAS",
                 ANSI_RESET);
+
         System.out.printf("TURNO %d.\n", partida.getTurno());
+        imprimirPecasCapturadas(partida.getPecasCapturadas());
+        imprime(partida.getPecas());
+    }
+
+    public static void imprimePartida(PartidaXadrez partida, boolean[][] movimentos) throws ExcecaoTabuleiro {
+        System.out.printf("%s%sTURNO ATUAL: %s.%s\n", ANSI_WHITE_BACKGROUND, ANSI_BLACK,
+                (partida.getJogadorAtual() == Cor.BRANCO) ? "BRANCAS" : "PRETAS",
+                ANSI_RESET);
+
+        System.out.printf("TURNO %d.\n", partida.getTurno());
+        imprimirPecasCapturadas(partida.getPecasCapturadas());
+        imprime(partida.getPecas(), movimentos);
     }
 
     public static void imprime(PecaXadrez pecas[][]){
@@ -83,5 +99,24 @@ public class Interface {
     public static void limparTela() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static void imprimirPecasCapturadas(ArrayList<PecaXadrez> pecas){
+        ArrayList brancas = new ArrayList<PecaXadrez>();
+        ArrayList pretas = new ArrayList<PecaXadrez>();
+
+        for (PecaXadrez p : pecas)
+            if (p.getCor() == Cor.BRANCO)
+                brancas.add(p);
+            else
+                pretas.add(p);
+
+            System.out.printf("%s%sPEÇAS CAPTURADAS.%s\n", ANSI_BLACK, ANSI_WHITE_BACKGROUND, ANSI_RESET);
+
+        System.out.printf("BRANCAS: %s%s.\n%sPRETAS: %s%s%s.\n", ANSI_YELLOW, Arrays.toString(brancas.toArray()),
+                                                ANSI_WHITE, ANSI_RED, Arrays.toString(pretas.toArray()),
+                                                ANSI_RESET);
+
+        System.out.print("\n");
     }
 }
