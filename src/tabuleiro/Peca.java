@@ -36,4 +36,8 @@ public abstract class Peca {
     public void setPosicao(Posicao pos){
         this.posicao = pos;
     }
+
+    public Posicao getPosicao(){
+        return posicao;
+    }
 }

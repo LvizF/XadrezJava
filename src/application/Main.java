@@ -15,7 +15,7 @@ public class Main {
         PosicaoXadrez dest = null;
 
         Scanner entrada = new Scanner(System.in);
-        while (true) {
+        while (!partida.getXequeMate()) {
             Interface.limparTela();
             try {
                 Interface.imprimePartida(partida);
@@ -32,6 +32,7 @@ public class Main {
                 dest = Interface.lerPosicao(entrada);
 
                 partida.fazerMovimento(orig, dest);
+
             }catch(ExcecaoXadrez e){
                 System.out.print(e.getMessage());
                 entrada.nextLine();
@@ -40,6 +41,9 @@ public class Main {
                 entrada.nextLine();
             }
         }
+
+        Interface.limparTela();
+        Interface.imprimePartida(partida);
 
     }
 }

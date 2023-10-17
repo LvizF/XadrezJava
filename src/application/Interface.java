@@ -37,23 +37,32 @@ public class Interface {
     }
 
     public static void imprimePartida(PartidaXadrez partida) throws ExcecaoTabuleiro {
-        System.out.printf("%s%sTURNO ATUAL: %s.%s\n", ANSI_WHITE_BACKGROUND, ANSI_BLACK,
-                (partida.getJogadorAtual() == Cor.BRANCO) ? "BRANCAS" : "PRETAS",
-                ANSI_RESET);
+        imprimeTopo(partida.getJogadorAtual(), partida.getTurno(), partida.getXeque(), partida.getXequeMate());
 
-        System.out.printf("TURNO %d.\n", partida.getTurno());
         imprimirPecasCapturadas(partida.getPecasCapturadas());
         imprime(partida.getPecas());
     }
 
     public static void imprimePartida(PartidaXadrez partida, boolean[][] movimentos) throws ExcecaoTabuleiro {
-        System.out.printf("%s%sTURNO ATUAL: %s.%s\n", ANSI_WHITE_BACKGROUND, ANSI_BLACK,
-                (partida.getJogadorAtual() == Cor.BRANCO) ? "BRANCAS" : "PRETAS",
-                ANSI_RESET);
-
-        System.out.printf("TURNO %d.\n", partida.getTurno());
+        imprimeTopo(partida.getJogadorAtual(), partida.getTurno(), partida.getXeque(), partida.getXequeMate());
         imprimirPecasCapturadas(partida.getPecasCapturadas());
         imprime(partida.getPecas(), movimentos);
+    }
+
+    private static void imprimeTopo(Cor jogadorAtual, int turno, boolean xeque, boolean xeque_mate){
+        if (!xeque_mate) {
+            System.out.printf("%s%sTURNO ATUAL: %s.%s\n", ANSI_WHITE_BACKGROUND, ANSI_BLACK,
+                    (jogadorAtual == Cor.BRANCO) ? "BRANCAS" : "PRETAS",
+                    ANSI_RESET);
+            if (xeque)
+                System.out.printf("%s%sEM XEQUE.%s\n", ANSI_WHITE_BACKGROUND, ANSI_RED, ANSI_RESET);
+        }else
+            System.out.printf("%sXEQUE-MATE! VITÓRIA DAS %s.\n%s", ANSI_RED, (jogadorAtual == Cor.PRETO) ?
+                    "PRETAS" : "BRANCAS", ANSI_RESET);
+
+        System.out.printf("TURNO %d.\n", turno);
+
+
     }
 
     public static void imprime(PecaXadrez pecas[][]){

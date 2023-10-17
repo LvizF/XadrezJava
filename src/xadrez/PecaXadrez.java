@@ -20,27 +20,27 @@ public abstract class PecaXadrez extends Peca {
     }
 
     protected boolean haPecaAdversaria(Posicao pos) throws ExcecaoTabuleiro {
+        if (!this.getTabuleiro().haPeca(pos))
+            return false;
         return ((PecaXadrez) this.getTabuleiro().getPeca(pos)).getCor() != this.getCor();
     }
 
-    /*protected boolean haPecaInimiga(Posicao pos){}
+    /*protected boolean haPecaInimiga(Posicao pos){}*/
 
 
-    public void aumentarContagemMovimentos(){
+    protected void aumentarContagemMovimentos(){
         this.contagemMovimentos++;
     }
 
-    public void reduzirContagemMovimentos(){
+    protected void reduzirContagemMovimentos(){
         this.contagemMovimentos--;
     }
 
-    */
     public Cor getCor() {
         return cor;
     }
-    /*
 
     public int getContagemMovimentos() {
         return contagemMovimentos;
-    }*/
+    }
 }

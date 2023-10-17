@@ -21,7 +21,7 @@ public class PosicaoXadrez extends Posicao {
     }
 
      protected static PosicaoXadrez dePosicao(Posicao pos) throws ExcecaoXadrez{
-        return new PosicaoXadrez((char)('a'+ pos.getColuna()), pos.getLinha());
+        return new PosicaoXadrez((char)('a'+ pos.getColuna()), pos.getLinha()+1);
     }
 
     @Override

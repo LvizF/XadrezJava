@@ -1,6 +1,7 @@
 package tabuleiro;
 
 import xadrez.ExcecaoXadrez;
+import xadrez.PecaXadrez;
 import xadrez.PosicaoXadrez;
 
 public class Tabuleiro {
@@ -32,7 +33,7 @@ public class Tabuleiro {
 
     public boolean haPeca(Posicao pos) throws ExcecaoTabuleiro{
         if (!this.posicaoExiste(pos))
-            throw new ExcecaoTabuleiro(String.format("A posição %s não existe.", pos));
+            throw new ExcecaoTabuleiro(String.format("A posição (%d, %d) não existe.", pos.getLinha(), pos.getColuna()));
 
         return this.getPeca(pos) != null;
     }
@@ -57,6 +58,7 @@ public class Tabuleiro {
             throw new ExcecaoTabuleiro("Há já uma peça na posição dada.");
 
         this.pecas[pos.getLinha()][pos.getColuna()] = peca;
+
         peca.setPosicao(pos);
     }
 
