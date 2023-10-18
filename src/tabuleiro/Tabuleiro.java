@@ -1,9 +1,5 @@
 package tabuleiro;
 
-import xadrez.ExcecaoXadrez;
-import xadrez.PecaXadrez;
-import xadrez.PosicaoXadrez;
-
 public class Tabuleiro {
     private final int linhas;
     private final int colunas;

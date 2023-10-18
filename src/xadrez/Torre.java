@@ -16,6 +16,8 @@ public class Torre extends PecaXadrez{
     public boolean[][] movimentosPossiveis() throws ExcecaoTabuleiro {
         boolean[][] movs = new boolean[this.getTabuleiro().getLinhas()][this.getTabuleiro().getColunas()];
 
+        if (posicao == null)
+            posicao = posicaoAntiga;
         int linha = this.posicao.getLinha();
         int coluna = this.posicao.getColuna();
 

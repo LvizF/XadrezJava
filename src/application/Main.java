@@ -1,18 +1,14 @@
 package application;
 
-import tabuleiro.Peca;
-import tabuleiro.Posicao;
 import xadrez.*;
-
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception{
         PartidaXadrez partida = new PartidaXadrez();
-        PosicaoXadrez orig = null;
-        PosicaoXadrez dest = null;
+        PosicaoXadrez orig;
+        PosicaoXadrez dest;
 
         Scanner entrada = new Scanner(System.in);
         while (!partida.getXequeMate()) {
@@ -33,10 +29,12 @@ public class Main {
 
                 partida.fazerMovimento(orig, dest);
 
-            }catch(ExcecaoXadrez e){
-                System.out.print(e.getMessage());
-                entrada.nextLine();
-            }catch(InputMismatchException e){
+                if (partida.hapromocao()){
+                    System.out.printf("Escolha o tipo de peça a que quer promover o peão (D/B/C/T): ");
+                    partida.substituiPromovido(entrada.nextLine());
+                }
+
+            }catch(Exception e){
                 System.out.print(e.getMessage());
                 entrada.nextLine();
             }

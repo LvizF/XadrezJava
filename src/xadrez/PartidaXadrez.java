@@ -1,11 +1,10 @@
 package xadrez;
 
-import application.Interface;
 import tabuleiro.ExcecaoTabuleiro;
-import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 import static java.lang.Math.abs;
@@ -20,6 +19,7 @@ public class PartidaXadrez {
     private boolean xeque;
     private boolean xequeMate;
     private PecaXadrez vulneravelEnPassant;
+    private PecaXadrez promovido;
 
     public PartidaXadrez() throws ExcecaoTabuleiro, ExcecaoXadrez{
         this.tabuleiro = new Tabuleiro(8, 8);
@@ -28,7 +28,7 @@ public class PartidaXadrez {
         this.pecasCapturadas = new ArrayList<PecaXadrez>();
         this.pecasNoTabuleiro = new ArrayList<PecaXadrez>();
         this.posicaoInicial();
-        this.vulneravelEnPassant = null;
+        this.promovido = this.vulneravelEnPassant = null;
         if (verificaXeque(Cor.PRETO) && jogadorAtual == Cor.BRANCO)
             throw new IllegalStateException("As pretas começam em xeque, mas jogam primeiro as brancas.\n");
         if (verificaXeque(Cor.BRANCO) && jogadorAtual == Cor.PRETO)
@@ -51,18 +51,6 @@ public class PartidaXadrez {
     private void colocarPeca(PecaXadrez peca, char coluna, int linha) throws ExcecaoTabuleiro {
         tabuleiro.colocarPeca(peca, new PosicaoXadrez(coluna, linha).paraPosicao());
         this.pecasNoTabuleiro.add(peca);
-    }
-
-    private void colocarPeca(PecaXadrez peca, Posicao pos) throws ExcecaoTabuleiro {
-        tabuleiro.colocarPeca(peca, pos);
-        this.pecasNoTabuleiro.add(peca);
-    }
-
-    private PecaXadrez retirarPeca(Posicao pos) throws ExcecaoTabuleiro{
-        PecaXadrez peca = (PecaXadrez) tabuleiro.removerPeca(pos);
-        this.pecasNoTabuleiro.remove(peca);
-
-        return peca;
     }
 
     public void posicaoInicial() throws ExcecaoTabuleiro{
@@ -164,12 +152,11 @@ public class PartidaXadrez {
         if (pecaCapturada != null)
             tabuleiro.removerPeca(dest);
 
-
         tabuleiro.colocarPeca(movente, dest);
-
 
         movente.aumentarContagemMovimentos();
 
+        promovido = null;
         //En passant
         if (movente instanceof Peao) {
             if (dest.getColuna() != orig.getColuna() && pecaCapturada == null) {
@@ -178,12 +165,43 @@ public class PartidaXadrez {
                 vulneravelEnPassant = null;
             }else
                 verificaEnPassant(movente, orig, dest);
-    }
 
+
+            //Promoção de peões
+            if (dest.getLinha() == 7 || dest.getLinha() == 0)
+                promovido = movente;
+
+
+        }
 
 
         return pecaCapturada;
     }
+
+    public PecaXadrez substituiPromovido(String tipo) throws ExcecaoTabuleiro {
+        if (promovido == null)
+            throw new IllegalStateException("Não há peça a ser promovida.");
+        if (!tipo.equals("B") && !tipo.equals("D") && !tipo.equals("T") && !tipo.equals("C"))
+            throw new InvalidParameterException(String.format("Tipo de peça inválido: %s.", tipo));
+
+        PecaXadrez pecaNova = novaPeca(tipo);
+
+        Posicao pos = promovido.getPosicao();
+        PecaXadrez peao = (PecaXadrez) tabuleiro.removerPeca(pos);
+        tabuleiro.colocarPeca(pecaNova, pos);
+        pecasNoTabuleiro.remove(peao);
+        pecasNoTabuleiro.add(pecaNova);
+
+        return pecaNova;
+    }
+
+    private PecaXadrez novaPeca(String tipo) {
+        if (tipo.equals("B")) return new Bispo(promovido.getCor(), tabuleiro);
+        if (tipo.equals("D")) return new Dama(promovido.getCor(), tabuleiro);
+        if (tipo.equals("C")) return new Cavalo(promovido.getCor(), tabuleiro);
+        return new Torre(promovido.getCor(), tabuleiro);
+    }
+
 
     private void verificaEnPassant(PecaXadrez movente, Posicao orig, Posicao dest) throws ExcecaoTabuleiro {
         if (abs(dest.getLinha() - orig.getLinha()) == 2) {
@@ -344,16 +362,8 @@ public class PartidaXadrez {
         return this.pecasCapturadas;
     }
 
-    public ArrayList<PecaXadrez> getPecasNoTabuleiro() {
-        return this.pecasNoTabuleiro;
-    }
-
     public boolean getXeque() {
         return xeque;
-    }
-
-    private void setXequeMate(){
-        this.xequeMate = true;
     }
 
     public boolean getXequeMate(){
@@ -362,6 +372,10 @@ public class PartidaXadrez {
 
     public PecaXadrez getVulneravelEnPassant(){
         return vulneravelEnPassant;
+    }
+
+    public boolean hapromocao(){
+        return promovido != null;
     }
 }
 

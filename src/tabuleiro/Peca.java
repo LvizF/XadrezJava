@@ -1,9 +1,5 @@
 package tabuleiro;
 
-import xadrez.ExcecaoXadrez;
-import xadrez.PartidaXadrez;
-
-import java.util.Arrays;
 
 public abstract class Peca {
     protected Posicao posicao;
