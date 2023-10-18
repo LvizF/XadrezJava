@@ -1,7 +1,6 @@
 package xadrez;
 
 import tabuleiro.ExcecaoTabuleiro;
-import tabuleiro.Peca;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 

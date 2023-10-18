@@ -62,18 +62,8 @@ public class PartidaXadrez {
     }
 
     public void posicaoInicial() throws ExcecaoTabuleiro{
-        this.colocarPeca(new Rei(Cor.BRANCO, this.tabuleiro), 'e', 1);
-        this.colocarPeca(new Rei(Cor.PRETO, this.tabuleiro), 'e', 8);
-
-        this.colocarPeca(new Dama(Cor.BRANCO, this.tabuleiro), 'd', 1);
-        this.colocarPeca(new Dama(Cor.PRETO, this.tabuleiro), 'd', 8);
-
-
-        this.colocarPeca(new Cavalo(Cor.BRANCO, this.tabuleiro), 'b', 1);
-        this.colocarPeca(new Cavalo(Cor.BRANCO, this.tabuleiro), 'g', 1);
-
-        this.colocarPeca(new Bispo(Cor.BRANCO, this.tabuleiro), 'c', 1);
-        this.colocarPeca(new Bispo(Cor.BRANCO, this.tabuleiro), 'f', 1);
+        this.colocarPeca(new Rei(Cor.BRANCO, this.tabuleiro, this), 'e', 1);
+        this.colocarPeca(new Rei(Cor.PRETO, this.tabuleiro, this), 'e', 8);
 
         this.colocarPeca(new Torre(Cor.BRANCO, this.tabuleiro), 'a', 1);
         this.colocarPeca(new Torre(Cor.BRANCO, this.tabuleiro), 'h', 1);
@@ -81,11 +71,24 @@ public class PartidaXadrez {
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'a', 8);
         this.colocarPeca(new Torre(Cor.PRETO, this.tabuleiro), 'h', 8);
 
+        this.colocarPeca(new Cavalo(Cor.PRETO, this.tabuleiro), 'e', 3);
+        this.colocarPeca(new Cavalo(Cor.BRANCO, this.tabuleiro), 'e', 6);
+
+        /*
+        this.colocarPeca(new Dama(Cor.BRANCO, this.tabuleiro), 'd', 1);
+        this.colocarPeca(new Dama(Cor.PRETO, this.tabuleiro), 'd', 8);
+
+        this.colocarPeca(new Cavalo(Cor.BRANCO, this.tabuleiro), 'b', 1);
+        this.colocarPeca(new Cavalo(Cor.BRANCO, this.tabuleiro), 'g', 1);
+
+        this.colocarPeca(new Bispo(Cor.BRANCO, this.tabuleiro), 'c', 1);
+        this.colocarPeca(new Bispo(Cor.BRANCO, this.tabuleiro), 'f', 1);
+
         this.colocarPeca(new Cavalo(Cor.PRETO, this.tabuleiro), 'b', 8);
         this.colocarPeca(new Cavalo(Cor.PRETO, this.tabuleiro), 'g', 8);
 
         this.colocarPeca(new Bispo(Cor.PRETO, this.tabuleiro), 'c', 8);
-        this.colocarPeca(new Bispo(Cor.PRETO, this.tabuleiro), 'f', 8);
+        this.colocarPeca(new Bispo(Cor.PRETO, this.tabuleiro), 'f', 8);*/
 
         this.colocarPeca(new Peao(Cor.PRETO, this.tabuleiro), 'a', 7);
         this.colocarPeca(new Peao(Cor.PRETO, this.tabuleiro), 'b', 7);
@@ -143,6 +146,18 @@ public class PartidaXadrez {
 
         if (tabuleiro.haPeca(dest) && pecaCapturada.getCor() == movente.getCor())
             throw new ExcecaoXadrez("Uma peça não pode capturar outra da mesma cor.");
+
+        if (movente instanceof Rei && orig.getColuna() == 4 && dest.getColuna() == 6){
+            if (!seguroParaORei(new Posicao(orig.getLinha(), 5), movente.getCor()) || !seguroParaORei(new Posicao(orig.getLinha(), 6), movente.getCor()))
+                throw new ExcecaoXadrez("O roque não é permitido.");
+            realizaMovimento(new Posicao(orig.getLinha(), 7), new Posicao(orig.getLinha(), dest.getColuna()-1));
+        }
+
+        if (movente instanceof Rei && orig.getColuna() == 4 && dest.getColuna() == 2){
+            if (!seguroParaORei(new Posicao(orig.getLinha(), 2), movente.getCor()) || !seguroParaORei(new Posicao(orig.getLinha(), 3), movente.getCor()))
+                throw new ExcecaoXadrez("O roque não é permitido.");
+            realizaMovimento(new Posicao(orig.getLinha(), 0), new Posicao(orig.getLinha(), dest.getColuna()+1));
+        }
 
         tabuleiro.removerPeca(orig);
 
@@ -214,14 +229,16 @@ public class PartidaXadrez {
         throw new IllegalStateException(String.format("Não há rei %s no tabuleiro.", (cor == Cor.BRANCO) ? "branco" : "preto"));
     }
 
-    private boolean verificaXeque(Cor cor) throws ExcecaoTabuleiro {
+    protected boolean verificaXeque(Cor cor) throws ExcecaoTabuleiro {
         Posicao reiPosicao = rei(cor).getPosicaoXadrez().paraPosicao();
+        return !seguroParaORei(reiPosicao, cor);
+    }
 
+    protected boolean seguroParaORei(Posicao pos, Cor cor) throws ExcecaoTabuleiro {
         for (PecaXadrez peca : this.pecasNoTabuleiro)
-            if (peca.getCor() == oponente(cor) && peca.movimentoPossivel(reiPosicao))
-                return true;
-
-        return false;
+            if (peca.getCor() == oponente(cor) && peca.movimentoPossivel(pos))
+                return false;
+        return true;
     }
 
     private boolean verificaXequeMate(Cor cor) throws ExcecaoTabuleiro{
@@ -254,6 +271,10 @@ public class PartidaXadrez {
         return true;
     }
 
+    private Cor oponente(Cor cor){
+        return (cor == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
+    }
+
     public int getTurno() {
         return turno;
     }
@@ -266,8 +287,8 @@ public class PartidaXadrez {
         return this.pecasCapturadas;
     }
 
-    private Cor oponente(Cor cor){
-        return (cor == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
+    public ArrayList<PecaXadrez> getPecasNoTabuleiro() {
+        return this.pecasNoTabuleiro;
     }
 
     public boolean getXeque() {
