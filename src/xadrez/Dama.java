@@ -14,6 +14,8 @@ public class Dama extends PecaXadrez {
         Tabuleiro tabuleiro = getTabuleiro();
         boolean[][] movs = new boolean[tabuleiro.getLinhas()][tabuleiro.getColunas()];
 
+        if (posicao == null)
+            posicao = posicaoAntiga;
         int linha = getPosicao().getLinha();
         int coluna = getPosicao().getColuna();
 

@@ -1,15 +1,18 @@
 package tabuleiro;
 
 import xadrez.ExcecaoXadrez;
+import xadrez.PartidaXadrez;
 
 import java.util.Arrays;
 
 public abstract class Peca {
     protected Posicao posicao;
+    protected Posicao posicaoAntiga;
     private Tabuleiro tabuleiro;
 
     public Peca(Tabuleiro tabuleiro){
         this.posicao = null;
+        this.posicaoAntiga = null;
         this.tabuleiro = tabuleiro;
     }
 
@@ -34,6 +37,7 @@ public abstract class Peca {
     }
 
     public void setPosicao(Posicao pos){
+        this.posicaoAntiga = this.posicao;
         this.posicao = pos;
     }
 

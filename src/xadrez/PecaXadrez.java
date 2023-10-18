@@ -8,6 +8,7 @@ import tabuleiro.Tabuleiro;
 public abstract class PecaXadrez extends Peca {
     private Cor cor;
     private int contagemMovimentos;
+    private boolean capturadoPorEnPassant;
 
     public PecaXadrez(Cor cor, Tabuleiro tabuleiro){
         super(tabuleiro);
@@ -42,5 +43,13 @@ public abstract class PecaXadrez extends Peca {
 
     public int getContagemMovimentos() {
         return contagemMovimentos;
+    }
+
+    public boolean isCapturadoPorEnPassant() {
+        return capturadoPorEnPassant;
+    }
+
+    public void setCapturadoPorEnPassant(boolean capturadoPorEnPassant) {
+        this.capturadoPorEnPassant = capturadoPorEnPassant;
     }
 }
