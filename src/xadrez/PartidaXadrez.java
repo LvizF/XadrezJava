@@ -195,6 +195,22 @@ public class PartidaXadrez {
             throw new ExcecaoTabuleiro(String.format("Há um %s na posição de origem, %s.", tabuleiro.getPeca(orig), orig));
 
         PecaXadrez pecaDest = (PecaXadrez) tabuleiro.removerPeca(dest);
+        if (pecaDest instanceof Rei && orig.getColuna() == 4 && dest.getColuna() == 6){
+            Posicao posTorre = new Posicao(dest.getLinha(), dest.getColuna()-1);
+            PecaXadrez torre = (PecaXadrez) tabuleiro.getPeca(posTorre);
+            if (torre == null)
+                throw new ExcecaoXadrez("Impossível desfazer movimento.");
+            desfazerMovimento(new Posicao(posTorre.getLinha(), 7), posTorre, null);
+        }
+
+        if (pecaDest instanceof Rei && orig.getColuna() == 4 && dest.getColuna() == 2){
+            Posicao posTorre = new Posicao(dest.getLinha(), dest.getColuna()+1);
+            PecaXadrez torre = (PecaXadrez) tabuleiro.getPeca(posTorre);
+            if (torre == null)
+                throw new ExcecaoXadrez("Impossível desfazer movimento.");
+            desfazerMovimento(new Posicao(posTorre.getLinha(), 0), posTorre, null);
+        }
+
         tabuleiro.colocarPeca(pecaDest, orig);
         pecaDest.setPosicao(orig);
 

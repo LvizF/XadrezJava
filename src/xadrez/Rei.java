@@ -66,7 +66,7 @@ public class Rei extends PecaXadrez{
         if (tabuleiro.posicaoExiste(pos) && movimentoPossivelParaoRei(pos))
             movs[pos.getLinha()][pos.getColuna()] = true;
 
-        if ((getContagemMovimentos() == 0) && naPrimeiraCasa()) {
+        if (!partida.getXeque() && (getContagemMovimentos() == 0) && naPrimeiraCasa()) {
             if (tabuleiro.haPeca(linha, 7) && tabuleiro.getPeca(linha, 7) instanceof Torre && ((PecaXadrez) tabuleiro.getPeca(linha, 7)).getContagemMovimentos() == 0 && !tabuleiro.haPeca(linha, 5) && !tabuleiro.haPeca(linha, 6))
                 movs[linha][6] = true;
 
